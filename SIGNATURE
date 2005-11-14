@@ -1,0 +1,40 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.50.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It will check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+SHA1 ce8099a1ae472269ba6e6ac648da02b195b651ca Build.PL
+SHA1 0243f8925b2a5d3214d3dbf7f57d102ef2a9899d MANIFEST
+SHA1 77497296477d02c31f2770f9173515f1a18e054a META.yml
+SHA1 b54054babe5f96a34feefb15c9ccd345a2711c0f Makefile.PL
+SHA1 861fe41ab8b3b6271f840ef1ea6015a3dd6cf315 README
+SHA1 d96d16a9fb3395b5cedb01545f2929df870f562f lib/Catalyst/Plugin/Session.pm
+SHA1 78469b77f8d2918627d268181f37d9ed561ed65c lib/Catalyst/Plugin/Session/State.pm
+SHA1 659a79a1b439b7226f8d09919755ae17d525140a lib/Catalyst/Plugin/Session/Store.pm
+SHA1 3f36887613664f51b7d683b473ef832e654a17d9 lib/Catalyst/Plugin/Session/Store/Dummy.pm
+SHA1 296cb8b0647063c752350633a82dccdab0b1493e lib/Catalyst/Plugin/Session/Test/Store.pm
+SHA1 2acbff46dc11c3e6d037094cecb2f9e897d49fd0 t/00_basic_sanity.t
+SHA1 a108faea2750b27f4c3f84a29741b3b8abd21052 t/01_setup.t
+SHA1 54069c488e5cf8a7207f85e455afeb3bede0f642 t/02_session_data.t
+SHA1 86d255a7c9f065a13049108362c949b3e35a4c24 t/99_pod.t
+SHA1 e923679a1bbd8eb8f727e46f5906af25de27ec97 t/99_podcoverage.t
+SHA1 bcff3b3bc433786e98f17f6ba4d4e7d22c506129 t/lib/SessionTestApp.pm
+SHA1 589bdc99982edf9d87c87a8c7847ff367446699d t/live_app.t
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (Darwin)
+
+iD8DBQFDePZnVCwRwOvSdBgRAtbiAJ42b+C2MLyodAsgOkvQaK1xo4Da+QCgjSqG
+d3OhQn/29aC+Kcb6thvMCHI=
+=PPxM
+-----END PGP SIGNATURE-----

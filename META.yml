@@ -1,0 +1,43 @@
+---
+name: Catalyst-Plugin-Session
+version: 0.01
+author: ~
+abstract: |-
+  Generic Session plugin - ties together server side
+  storage and client side tickets required to maintain session data.
+license: perl
+requires:
+  Catalyst: 5.49
+  Digest: 0
+  File::Spec: 0
+  File::Temp: 0
+  Test::Deep: 0
+  Test::MockObject: 1.01
+  Test::More: 0
+  perl: 5.8.1
+provides:
+  Catalyst::Plugin::Session:
+    file: lib/Catalyst/Plugin/Session.pm
+    version: 0.01
+  Catalyst::Plugin::Session::State:
+    file: lib/Catalyst/Plugin/Session/State.pm
+  Catalyst::Plugin::Session::Store:
+    file: lib/Catalyst/Plugin/Session/Store.pm
+  Catalyst::Plugin::Session::Store::Dummy:
+    file: lib/Catalyst/Plugin/Session/Store/Dummy.pm
+  Catalyst::Plugin::Session::Test::Store:
+    file: lib/Catalyst/Plugin/Session/Test/Store.pm
+    version: 0.01
+  SessionStoreTest:
+    file: lib/Catalyst/Plugin/Session/Test/Store.pm
+    version: 0.01
+  SessionStoreTest2:
+    file: lib/Catalyst/Plugin/Session/Test/Store.pm
+    version: 0.01
+  t1:
+    file: lib/Catalyst/Plugin/Session/Test/Store.pm
+    version: 0.01
+  t2:
+    file: lib/Catalyst/Plugin/Session/Test/Store.pm
+    version: 0.01
+generated_by: Module::Build version 0.2611
