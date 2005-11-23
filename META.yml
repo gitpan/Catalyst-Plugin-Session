@@ -1,10 +1,10 @@
 ---
 name: Catalyst-Plugin-Session
-version: 0.01
+version: 0.02
 author: ~
 abstract: |-
   Generic Session plugin - ties together server side
-  storage and client side tickets required to maintain session data.
+  storage and client side state required to maintain session data.
 license: perl
 requires:
   Catalyst: 5.49
@@ -18,7 +18,7 @@ requires:
 provides:
   Catalyst::Plugin::Session:
     file: lib/Catalyst/Plugin/Session.pm
-    version: 0.01
+    version: 0.02
   Catalyst::Plugin::Session::State:
     file: lib/Catalyst/Plugin/Session/State.pm
   Catalyst::Plugin::Session::Store:

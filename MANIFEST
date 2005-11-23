@@ -1,4 +1,5 @@
 Build.PL
+Catalyst-Plugin-Session-0.02.tar.gz
 lib/Catalyst/Plugin/Session.pm
 lib/Catalyst/Plugin/Session/State.pm
 lib/Catalyst/Plugin/Session/Store.pm
@@ -6,6 +7,8 @@ lib/Catalyst/Plugin/Session/Store/Dummy.pm
 lib/Catalyst/Plugin/Session/Test/Store.pm
 Makefile.PL
 MANIFEST			This list of files
+META.yml
+README
 t/00_basic_sanity.t
 t/01_setup.t
 t/02_session_data.t
@@ -13,6 +16,4 @@ t/99_pod.t
 t/99_podcoverage.t
 t/lib/SessionTestApp.pm
 t/live_app.t
-META.yml
-README
 SIGNATURE    Added here by Module::Build

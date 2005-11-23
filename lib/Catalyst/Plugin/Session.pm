@@ -11,7 +11,7 @@ use Catalyst::Exception ();
 use Digest              ();
 use overload            ();
 
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 BEGIN {
     __PACKAGE__->mk_accessors(qw/sessionid session_delete_reason/);
@@ -203,19 +203,36 @@ __END__
 =head1 NAME
 
 Catalyst::Plugin::Session - Generic Session plugin - ties together server side
-storage and client side tickets required to maintain session data.
+storage and client side state required to maintain session data.
 
 =head1 SYNOPSIS
 
-    use Catalyst qw/Session Session::Store::FastMmap Session::State::Cookie/;
+    # To get sessions to "just work", all you need to do is use these plugins:
+
+    use Catalyst qw/
+      Session
+      Session::Store::FastMmap
+      Session::State::Cookie
+      /;
+
+	# you can replace Store::FastMmap with Store::File - both have sensible
+	# default configurations (see their docs for details)
+
+	# more complicated backends are available for other scenarios (DBI storage,
+	# etc)
+
+
+    # after you've loaded the plugins you can save session data
+    # For example, if you are writing a shopping cart, it could be implemented
+    # like this:
 
     sub add_item : Local {
         my ( $self, $c ) = @_;
 
         my $item_id = $c->req->param("item");
 
-        # $c->session is stored across requests, so
-        # other actions will see these values
+        # $c->session is a hash ref, a bit like $c->stash
+        # the difference is that it' preserved across requests
 
         push @{ $c->session->{items} }, $item_id;
 
@@ -227,7 +244,7 @@ storage and client side tickets required to maintain session data.
 
         # values in $c->session are restored
         $c->stash->{items_to_display} =
-            [ map { MyModel->retrieve($_) } @{ $c->session->{items} } ];
+          [ map { MyModel->retrieve($_) } @{ $c->session->{items} } ];
 
         $c->forward("MyView");
     }
@@ -246,6 +263,24 @@ the client. This data is stored so that the it may be revived for every request
 made by the same client.
 
 This plugin links the two pieces together.
+
+=head1 RECCOMENDED BACKENDS
+
+=over 4
+
+=item Session::State::Cookie
+
+The only really sane way to do state is using cookies.
+
+=item Session::Store::File
+
+A portable backend, based on Cache::File.
+
+=item Session::Store::FastMmap
+
+A fast and flexible backend, based on Cache::FastMmap.
+
+=back
 
 =head1 METHODS
 
@@ -280,6 +315,12 @@ C<address mismatch>
 C<session expired>
 
 =back
+
+=back
+
+=item INTERNAL METHODS
+
+=over 4
 
 =item setup
 
@@ -397,7 +438,7 @@ the store.
 		my $c = shift;
 
 		# don't touch $c->session yet!
-		
+
 		$c->NEXT::prepare_action( @_ );
 
 		$c->session;  # this is OK
