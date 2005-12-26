@@ -1,5 +1,5 @@
 Build.PL
-Catalyst-Plugin-Session-0.02.tar.gz
+Changes
 lib/Catalyst/Plugin/Session.pm
 lib/Catalyst/Plugin/Session/State.pm
 lib/Catalyst/Plugin/Session/Store.pm
@@ -11,7 +11,7 @@ META.yml
 README
 t/00_basic_sanity.t
 t/01_setup.t
-t/02_session_data.t
+t/03_flash.t
 t/99_pod.t
 t/99_podcoverage.t
 t/lib/SessionTestApp.pm

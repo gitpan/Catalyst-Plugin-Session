@@ -14,20 +14,20 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 ce8099a1ae472269ba6e6ac648da02b195b651ca Build.PL
-SHA1 29f4bcec367840fc32b9716788996e3148260d8f Catalyst-Plugin-Session-0.02.tar.gz
-SHA1 7ba2711ea0e809283721ce048fc2af837d01b836 MANIFEST
-SHA1 6ae0daa60477864e5f0e325061b1deed808b0f73 META.yml
-SHA1 b54054babe5f96a34feefb15c9ccd345a2711c0f Makefile.PL
-SHA1 7bab9d8f85d8a04daa666a451ead7a4706b06a49 README
-SHA1 b69a35a74937767ec6962554bd1e5a74664221e6 lib/Catalyst/Plugin/Session.pm
+SHA1 a1deec64e4f6ad53c5d439fb571a2407a2009499 Build.PL
+SHA1 81f6f210e5a8eb0c53f2315423fbc0596e59b57c Changes
+SHA1 fb0bb8ffd726af17bfb9dbdbf3f9836767211777 MANIFEST
+SHA1 347faeb4e384c27a96a67a56418ad6b386358a02 META.yml
+SHA1 d86c6bb9476f61e93b149af514d25d3357bd053f Makefile.PL
+SHA1 4b51006fdb4f44032c047e07a97490b46553e1a8 README
+SHA1 d437eb49a3050b98091277154fc908be56f8934e lib/Catalyst/Plugin/Session.pm
 SHA1 78469b77f8d2918627d268181f37d9ed561ed65c lib/Catalyst/Plugin/Session/State.pm
 SHA1 659a79a1b439b7226f8d09919755ae17d525140a lib/Catalyst/Plugin/Session/Store.pm
-SHA1 3f36887613664f51b7d683b473ef832e654a17d9 lib/Catalyst/Plugin/Session/Store/Dummy.pm
+SHA1 245f98c39947f2c2197f2311395f8ac79cf301e7 lib/Catalyst/Plugin/Session/Store/Dummy.pm
 SHA1 1c97d775b4481236738771ccfb1a8b9e744d9c59 lib/Catalyst/Plugin/Session/Test/Store.pm
 SHA1 2acbff46dc11c3e6d037094cecb2f9e897d49fd0 t/00_basic_sanity.t
 SHA1 a108faea2750b27f4c3f84a29741b3b8abd21052 t/01_setup.t
-SHA1 54069c488e5cf8a7207f85e455afeb3bede0f642 t/02_session_data.t
+SHA1 3d5816f46d14cf053c93147324c34d127cfbb481 t/03_flash.t
 SHA1 86d255a7c9f065a13049108362c949b3e35a4c24 t/99_pod.t
 SHA1 e923679a1bbd8eb8f727e46f5906af25de27ec97 t/99_podcoverage.t
 SHA1 bcff3b3bc433786e98f17f6ba4d4e7d22c506129 t/lib/SessionTestApp.pm
@@ -35,7 +35,7 @@ SHA1 589bdc99982edf9d87c87a8c7847ff367446699d t/live_app.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.1 (Darwin)
 
-iD8DBQFDhF+kVCwRwOvSdBgRAjvXAJ9jmsol3QXJa1Wqi0MzzwCA/MbaDgCfeXaf
-g9I5UdqbeYoDL2Ng9oIaQdA=
-=b3V8
+iD8DBQFDr6hgVCwRwOvSdBgRAiptAJoD8H+iYlRfaZSjNAWrODQDi0bZJACgnrCr
+TjKmasiU4VPrEYnYKO5ozfw=
+=srbl
 -----END PGP SIGNATURE-----

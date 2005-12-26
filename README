@@ -81,6 +81,35 @@ METHODS
         This method will automatically create a new session and session ID
         if none exists.
 
+    flash
+        This is like Ruby on Rails' flash data structure. Think of it as a
+        stash that lasts a single redirect, not only a forward.
+
+            sub moose : Local {
+                my ( $self, $c ) = @_;
+
+                $c->flash->{beans} = 10;
+                $c->response->redirect( $c->uri_for("foo") );
+            }
+
+            sub foo : Local {
+                my ( $self, $c ) = @_;
+
+                my $value = $c->flash->{beans};
+
+                # ...
+
+                $c->response->redirect( $c->uri_for("bar") );
+            }
+
+            sub bar : Local {
+                my ( $self, $c ) = @_;
+
+                if ( exists $c->flash->{beans} ) { # false
+        
+                }
+            }
+
     session_delete_reason
         This accessor contains a string with the reason a session was
         deleted. Possible values include:
@@ -89,8 +118,24 @@ METHODS
 
         *   "session expired"
 
-    INTERNAL METHODS
+    session_expire_key $key, $ttl
+        Mark a key to expire at a certain time (only useful when shorter
+        than the expiry time for the whole session).
 
+        For example:
+
+            __PACKAGE__->config->{session}{expires} = 1000000000000; # forever
+
+            # later
+
+            $c->session_expire_key( __user => 3600 );
+
+        Will make the session data survive, but the user will still be
+        logged out after an hour.
+
+        Note that these values are not auto extended.
+
+INTERNAL METHODS
     setup
         This method is extended to also make calls to
         "check_session_plugin_requirements" and "setup_session".
@@ -104,9 +149,11 @@ METHODS
         values listed in "CONFIGURATION".
 
     prepare_action
-        This methoid is extended, and will restore session data and check it
-        for validity if a session id is defined. It assumes that the State
-        plugin will populate the "sessionid" key beforehand.
+        This methoid is extended.
+
+        It's only effect is if the (off by default) "flash_to_stash"
+        configuration parameter is on - then it will copy the contents of
+        the flash to the stash at prepare time.
 
     finalize
         This method is extended and will extend the expiry time, as well as
@@ -121,6 +168,10 @@ METHODS
         This method will initialize the internal structure of the session,
         and is called by the "session" method if appropriate.
 
+    create_session_id
+        Creates a new session id using "generate_session_id" if there is no
+        session ID yet.
+
     generate_session_id
         This method will return a string that can be used as a session ID.
         It is supposed to be a reasonably random string with enough bits to
@@ -133,6 +184,12 @@ METHODS
         should be overridable in case you want to provide more random data.
 
         Currently it returns a concatenated string which contains:
+
+    validate_session_id SID
+        Make sure a session ID is of the right format.
+
+        This currently ensures that the session ID string is any amount of
+        case insensitive hexadecimal characters.
 
         *   A counter
 
@@ -203,32 +260,35 @@ CONFIGURATION
         7200 (two hours).
 
     verify_address
-        When false, "$c->request->address" will be checked at prepare time.
+        When true, "<$c-"request->address>> will be checked at prepare time.
         If it is not the same as the address that initiated the session, the
         session is deleted.
+
+    flash_to_stash
+        This option makes it easier to have actions behave the same whether
+        they were forwarded to or redirected to. On prepare time it copies
+        the contents of "flash" (if any) to the stash.
 
 SPECIAL KEYS
     The hash reference returned by "$c->session" contains several keys which
     are automatically set:
 
     __expires
-        A timestamp whose value is the last second when the session is still
-        valid. If a session is restored, and __expires is less than the
-        current time, the session is deleted.
+        This key no longer exists. This data is now saved elsewhere.
 
     __updated
-        The last time a session was saved. This is the value of
-        "$c->{session}{__expires} - $c->config->{session}{expires}".
+        The last time a session was saved to the store.
 
     __created
         The time when the session was first created.
 
     __address
         The value of "$c->request->address" at the time the session was
-        created. This value is only populated of "verify_address" is true in
+        created. This value is only populated if "verify_address" is true in
         the configuration.
 
 CAVEATS
+  Round the Robin Proxies
     "verify_address" could make your site inaccessible to users who are
     behind load balanced proxies. Some ISPs may give a different IP to each
     request by the same client due to this type of proxying. If addresses
@@ -241,11 +301,40 @@ CAVEATS
     "__address" sepcial key from the session hash when the hash is first
     created.
 
+  Race Conditions
+    In this day and age where cleaning detergents and dutch football (not
+    the american kind) teams roam the plains in great numbers, requests may
+    happen simultaneously. This means that there is some risk of session
+    data being overwritten, like this:
+
+    1.  request a starts, request b starts, with the same session id
+
+    2.  session data is loaded in request a
+
+    3.  session data is loaded in request b
+
+    4.  session data is changed in request a
+
+    5.  request a finishes, session data is updated and written to store
+
+    6.  request b finishes, session data is updated and written to store,
+        overwriting changes by request a
+
+    If this is a concern in your application, a soon to be developed locking
+    solution is the only safe way to go. This will have a bigger overhead.
+
+    For applications where any given user is only making one request at a
+    time this plugin should be safe enough.
+
 AUTHORS
-    Andy Grundman Christian Hansen Yuval Kogman, "nothingmuch@woobling.org"
+    Andy Grundman
+    Christian Hansen
+    Yuval Kogman, "nothingmuch@woobling.org" (current maintainer)
     Sebastian Riedel
 
-COPYRIGHT & LICNESE
+    And countless other contributers from #catalyst. Thanks guys!
+
+COPYRIGHT & LICENSE
             Copyright (c) 2005 the aforementioned authors. All rights
             reserved. This program is free software; you can redistribute
             it and/or modify it under the same terms as Perl itself.

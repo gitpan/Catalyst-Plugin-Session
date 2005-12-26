@@ -9,7 +9,9 @@ WriteMakefile
                            'Digest' => '0',
                            'File::Spec' => '0',
                            'File::Temp' => '0',
+                           'Object::Signature' => '0',
                            'Test::Deep' => '0',
+                           'Test::Exception' => '0',
                            'Test::MockObject' => '1.01',
                            'Test::More' => '0'
                          },

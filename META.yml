@@ -1,6 +1,6 @@
 ---
 name: Catalyst-Plugin-Session
-version: 0.02
+version: 0.03
 author: ~
 abstract: |-
   Generic Session plugin - ties together server side
@@ -11,14 +11,16 @@ requires:
   Digest: 0
   File::Spec: 0
   File::Temp: 0
+  Object::Signature: 0
   Test::Deep: 0
+  Test::Exception: 0
   Test::MockObject: 1.01
   Test::More: 0
   perl: 5.8.1
 provides:
   Catalyst::Plugin::Session:
     file: lib/Catalyst/Plugin/Session.pm
-    version: 0.02
+    version: 0.03
   Catalyst::Plugin::Session::State:
     file: lib/Catalyst/Plugin/Session/State.pm
   Catalyst::Plugin::Session::Store:
