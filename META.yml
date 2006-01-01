@@ -1,6 +1,6 @@
 ---
 name: Catalyst-Plugin-Session
-version: 0.04
+version: 0.05
 author: ~
 abstract: |-
   Generic Session plugin - ties together server side
@@ -20,7 +20,7 @@ requires:
 provides:
   Catalyst::Plugin::Session:
     file: lib/Catalyst/Plugin/Session.pm
-    version: 0.04
+    version: 0.05
   Catalyst::Plugin::Session::State:
     file: lib/Catalyst/Plugin/Session/State.pm
   Catalyst::Plugin::Session::Store:

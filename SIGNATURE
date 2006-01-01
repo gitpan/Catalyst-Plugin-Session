@@ -15,27 +15,27 @@ not run its Makefile.PL or Build.PL.
 Hash: SHA1
 
 SHA1 a1deec64e4f6ad53c5d439fb571a2407a2009499 Build.PL
-SHA1 b7d43490d330c89c5372b8a7e4bf24f1ecbf1e39 Changes
+SHA1 287d4c230aec6ccd7576bc0f29e4e12314b8bc6f Changes
 SHA1 fb0bb8ffd726af17bfb9dbdbf3f9836767211777 MANIFEST
-SHA1 3c006d8c728a5d9a0cfd8b2e369fb21e13e59b5e META.yml
+SHA1 22a9ee848f66b906295dd30a7a9cbdd0f5d8aa09 META.yml
 SHA1 d86c6bb9476f61e93b149af514d25d3357bd053f Makefile.PL
-SHA1 4b51006fdb4f44032c047e07a97490b46553e1a8 README
-SHA1 a1b2f91fb9b3070a4bee4ff406b954763d28a46a lib/Catalyst/Plugin/Session.pm
+SHA1 3e20d97b27896e1d1e882c0dd8cf5b28da322d6e README
+SHA1 59aaea0f2e00d37e2b3cdd421c988911b6ed9201 lib/Catalyst/Plugin/Session.pm
 SHA1 78469b77f8d2918627d268181f37d9ed561ed65c lib/Catalyst/Plugin/Session/State.pm
-SHA1 659a79a1b439b7226f8d09919755ae17d525140a lib/Catalyst/Plugin/Session/Store.pm
+SHA1 7222f45c875cef935dc6f74e7ab3af2d53db4923 lib/Catalyst/Plugin/Session/Store.pm
 SHA1 245f98c39947f2c2197f2311395f8ac79cf301e7 lib/Catalyst/Plugin/Session/Store/Dummy.pm
 SHA1 1c97d775b4481236738771ccfb1a8b9e744d9c59 lib/Catalyst/Plugin/Session/Test/Store.pm
 SHA1 2acbff46dc11c3e6d037094cecb2f9e897d49fd0 t/00_basic_sanity.t
 SHA1 a108faea2750b27f4c3f84a29741b3b8abd21052 t/01_setup.t
-SHA1 3d5816f46d14cf053c93147324c34d127cfbb481 t/03_flash.t
+SHA1 e592e22bc0e3544ba199249ef1f54a3f2f71b430 t/03_flash.t
 SHA1 86d255a7c9f065a13049108362c949b3e35a4c24 t/99_pod.t
 SHA1 e923679a1bbd8eb8f727e46f5906af25de27ec97 t/99_podcoverage.t
-SHA1 bcff3b3bc433786e98f17f6ba4d4e7d22c506129 t/lib/SessionTestApp.pm
-SHA1 589bdc99982edf9d87c87a8c7847ff367446699d t/live_app.t
+SHA1 dab0d8b1baacff8835a2c1b9f8c5b61a4e00e5a8 t/lib/SessionTestApp.pm
+SHA1 db7922166eee9095ddadefe355fd5ee1dd2809d6 t/live_app.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.1 (Darwin)
 
-iD8DBQFDsnvmVCwRwOvSdBgRAs78AJ0VydnSr1sPsiZZPPDYR4E0ZSbFbgCdFk3k
-raX0CtSmMZMGZ3KY7XYYp3o=
-=StTr
+iD8DBQFDt7KHVCwRwOvSdBgRAvjqAJ4je5Da7cubJxk4H9JkULYub4a8OwCeMbYB
+tlAr9V4YMn+olazn0jBPYi8=
+=xpT3
 -----END PGP SIGNATURE-----

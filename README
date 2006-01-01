@@ -18,6 +18,7 @@ SYNOPSIS
             # more complicated backends are available for other scenarios (DBI storage,
             # etc)
 
+
         # after you've loaded the plugins you can save session data
         # For example, if you are writing a shopping cart, it could be implemented
         # like this:
@@ -81,9 +82,25 @@ METHODS
         This method will automatically create a new session and session ID
         if none exists.
 
+    session_expires
+    session_expires $reset
+        This method returns the time when the current session will expire,
+        or 0 if there is no current session. If there is a session and it
+        already expired, it will delete the session and return 0 as well.
+
+        If the $reset parameter is true, and there is a session ID the
+        expiry time will be reset to the current time plus the time to live
+        (see "CONFIGURATION"). This is used when creating a new session.
+
     flash
         This is like Ruby on Rails' flash data structure. Think of it as a
-        stash that lasts a single redirect, not only a forward.
+        stash that lasts for longer than one request, letting you redirect
+        instead of forward.
+
+        The flash data will be cleaned up only on requests on which actually
+        use $c->flash (thus allowing multiple redirections), and the policy
+        is to delete all the keys which were present at the time the data
+        was loaded just before the data is saved.
 
             sub moose : Local {
                 my ( $self, $c ) = @_;
@@ -106,8 +123,8 @@ METHODS
                 my ( $self, $c ) = @_;
 
                 if ( exists $c->flash->{beans} ) { # false
-        
-                }
+                
+        }
             }
 
     session_delete_reason
@@ -172,6 +189,12 @@ INTERNAL METHODS
         Creates a new session id using "generate_session_id" if there is no
         session ID yet.
 
+    validate_session_id SID
+        Make sure a session ID is of the right format.
+
+        This currently ensures that the session ID string is any amount of
+        case insensitive hexadecimal characters.
+
     generate_session_id
         This method will return a string that can be used as a session ID.
         It is supposed to be a reasonably random string with enough bits to
@@ -184,12 +207,6 @@ INTERNAL METHODS
         should be overridable in case you want to provide more random data.
 
         Currently it returns a concatenated string which contains:
-
-    validate_session_id SID
-        Make sure a session ID is of the right format.
-
-        This currently ensures that the session ID string is any amount of
-        case insensitive hexadecimal characters.
 
         *   A counter
 
@@ -274,7 +291,7 @@ SPECIAL KEYS
     are automatically set:
 
     __expires
-        This key no longer exists. This data is now saved elsewhere.
+        This key no longer exists. Use "session_expires" instead.
 
     __updated
         The last time a session was saved to the store.
