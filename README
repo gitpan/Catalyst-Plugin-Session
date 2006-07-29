@@ -99,8 +99,8 @@ METHODS
 
         The flash data will be cleaned up only on requests on which actually
         use $c->flash (thus allowing multiple redirections), and the policy
-        is to delete all the keys which were present at the time the data
-        was loaded just before the data is saved.
+        is to delete all the keys which haven't changed since the flash data
+        was loaded at the end of every request.
 
             sub moose : Local {
                 my ( $self, $c ) = @_;
@@ -126,6 +126,16 @@ METHODS
                 
         }
             }
+
+    keep_flash @keys
+        If you wawnt to keep a flash key for the next request too, even if
+        it hasn't changed, call "keep_flash" and pass in the keys as
+        arguments.
+
+    delete_session REASON
+        This method is used to invalidate a session. It takes an optional
+        parameter which will be saved in "session_delete_reason" if
+        provided.
 
     session_delete_reason
         This accessor contains a string with the reason a session was
@@ -175,11 +185,6 @@ INTERNAL METHODS
     finalize
         This method is extended and will extend the expiry time, as well as
         persist the session data if a session exists.
-
-    delete_session REASON
-        This method is used to invalidate a session. It takes an optional
-        parameter which will be saved in "session_delete_reason" if
-        provided.
 
     initialize_session_data
         This method will initialize the internal structure of the session,
