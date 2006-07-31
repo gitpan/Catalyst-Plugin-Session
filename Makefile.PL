@@ -22,7 +22,6 @@ WriteMakefile
         )
 ;
 
-
 my %state = (
     Cookie => 0.03,
     URI    => 0.02,
