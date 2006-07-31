@@ -20,3 +20,26 @@ WriteMakefile
           'PL_FILES' => {}
         )
 ;
+
+my %state = (
+    Cookie => 0.03,
+    URI    => 0.02,
+);
+
+foreach my $module (keys %state) {
+    eval "require Catalyst::Plugin::Session::State::$module" and
+    eval { "Catalyst::Plugin::Session::State::$module"->VERSION($state{$module}) }
+        || warn <<WARN
+
+********** NOTE **********
+**************************
+
+Catalyst::Plugin::Session::State::$module must also be updated!
+
+The currently installed version is *not* compatible with this version of
+Catalyst::Plugin::Session!
+
+**************************
+**************************
+WARN
+}
