@@ -19,3 +19,4 @@ t/lib/FlashTestApp.pm
 t/lib/SessionTestApp.pm
 t/live_app.t
 TODO
+SIGNATURE                                Public-key signature (added by MakeMaker)
