@@ -14,18 +14,18 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 4b5d1353ec9b222f6156cfc668b120ab72aa2b52 Changes
+SHA1 67e6dd396b4bcc1e87ea6d761189c6dcf92a0613 Changes
 SHA1 2bc2909567f7e71c432c40bd1e3a745a3513c116 MANIFEST
-SHA1 4ea7d1df27e9a3cf7b611718ec1e94c00dd643d8 META.yml
-SHA1 b8677d8ed67907bd44895f3e41b8274d944ed516 Makefile.PL
+SHA1 ef64cecc94b526bda7685c65a212a6a2f9e414dc META.yml
+SHA1 9f87a31a1f1f2c1a638bced48531a9eada5442aa Makefile.PL
 SHA1 f1b8c043993249ccd3bb0a39e00bd4b76b5af7aa README
 SHA1 95ec7d7200aced8d44e544b912e3961f2225a40d TODO
-SHA1 d8a920d5f8be5ed07d5086832c19c0aff478580c lib/Catalyst/Plugin/Session.pm
+SHA1 19f19ec669df991ebd841d15da1c2a8571e99a33 lib/Catalyst/Plugin/Session.pm
 SHA1 78469b77f8d2918627d268181f37d9ed561ed65c lib/Catalyst/Plugin/Session/State.pm
 SHA1 7222f45c875cef935dc6f74e7ab3af2d53db4923 lib/Catalyst/Plugin/Session/Store.pm
 SHA1 245f98c39947f2c2197f2311395f8ac79cf301e7 lib/Catalyst/Plugin/Session/Store/Dummy.pm
 SHA1 09d5aae2784b6848a2b663b7f4791bf1076b1c89 lib/Catalyst/Plugin/Session/Test/Store.pm
-SHA1 f85732a34f87cddd093763d5a16de1ce8c2864f0 lib/Catalyst/Plugin/Session/Tutorial.pod
+SHA1 88fa78ae76c012da2c08280b8ba5a5889dedb7c8 lib/Catalyst/Plugin/Session/Tutorial.pod
 SHA1 2acbff46dc11c3e6d037094cecb2f9e897d49fd0 t/00_basic_sanity.t
 SHA1 a108faea2750b27f4c3f84a29741b3b8abd21052 t/01_setup.t
 SHA1 8195d7ba16322506c26b6447fe602a01957b803d t/03_flash.t
@@ -38,7 +38,7 @@ SHA1 77c6345ff29f11b584133aa9e99fd007270823b4 t/live_app.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.1 (Darwin)
 
-iD8DBQFEzkqUVCwRwOvSdBgRAugoAJ9vwbNNemPE3fg8VRV1dKWf87WkugCcCnqi
-C5Frs/5QFwBcOoXrYZq+wDk=
-=PbZL
+iD8DBQFEzwurVCwRwOvSdBgRAhP6AJ0eNwbkbZT1/PduOyYlFM2xMm37IACfTfK/
+ZlF/qrfLxR/ivJuGAfBu9Tk=
+=ozFF
 -----END PGP SIGNATURE-----

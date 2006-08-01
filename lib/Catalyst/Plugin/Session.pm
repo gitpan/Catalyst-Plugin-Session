@@ -12,7 +12,7 @@ use Digest              ();
 use overload            ();
 use Object::Signature   ();
 
-our $VERSION = "0.09";
+our $VERSION = "0.10";
 
 my @session_data_accessors; # used in delete_session
 BEGIN {
@@ -90,16 +90,19 @@ sub prepare_action {
 sub finalize {
     my $c = shift;
 
-    $c->_save_session_expires;
+    $c->_save_session_id;
     $c->_save_session;
     $c->_save_flash;
-    $c->_save_session_id;
+    $c->_save_session_expires;
 
     $c->NEXT::finalize(@_);
 }
 
 sub _save_session_id {
     my $c = shift;
+
+    # we already called set when allocating
+    # no need to tell the state plugins anything new
 }
 
 sub _save_session_expires {
