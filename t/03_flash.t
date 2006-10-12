@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 8;
 use Test::MockObject::Extends;
 use Test::Exception;
 
@@ -17,9 +17,10 @@ $c->mock(
     get_session_data => sub {
         my ( $c, $key ) = @_;
         return $key =~ /expire/ ? time() + 1000 : $flash;
-    }
+    },
 );
-$c->set_true("store_session_data");
+$c->mock("store_session_data" => sub { $flash = $_[2] });
+$c->mock("delete_session_data" => sub { $flash = {} });
 $c->set_always( _sessionid => "deadbeef" );
 $c->set_always( config     => { session => { expires => 1000 } } );
 $c->set_always( stash      => {} );
@@ -42,7 +43,17 @@ is_deeply( $c->flash, { bar => "gorch" }, "one key in flash" );
 
 $c->finalize;
 
-is_deeply( $c->flash, {}, "nothing in flash" );
+$c->flash->{test} = 'clear_flash';
+
+$c->finalize;
+
+$c->clear_flash();
+
+is_deeply( $c->flash, {}, "nothing in flash after clear_flash" );
+
+$c->finalize;
+
+is_deeply( $c->flash, {}, "nothing in flash after finalize after clear_flash" );
 
 $c->flash->{bar} = "gorch";
 
@@ -52,4 +63,3 @@ $c->finalize;
 $c->prepare_action;
 
 is_deeply( $c->stash, { bar => "gorch" }, "flash copied to stash" );
-

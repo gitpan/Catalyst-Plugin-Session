@@ -18,7 +18,6 @@ SYNOPSIS
             # more complicated backends are available for other scenarios (DBI storage,
             # etc)
 
-
         # after you've loaded the plugins you can save session data
         # For example, if you are writing a shopping cart, it could be implemented
         # like this:
@@ -123,9 +122,12 @@ METHODS
                 my ( $self, $c ) = @_;
 
                 if ( exists $c->flash->{beans} ) { # false
-                
-        }
+        
+                }
             }
+
+    clear_flash
+        Zap all the keys in the flash regardless of their current state.
 
     keep_flash @keys
         If you wawnt to keep a flash key for the next request too, even if
@@ -245,6 +247,11 @@ INTERNAL METHODS
 
         Also have a look at Crypt::Random and the various openssl bindings -
         these modules provide APIs for cryptographically secure random data.
+
+    finalize_session
+        Clean up the session during "finalize".
+
+        This clears the various accessors after saving to the store.
 
     dump_these
         See "dump_these" in Catalyst - ammends the session data structure to
