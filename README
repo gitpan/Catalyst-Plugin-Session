@@ -293,6 +293,8 @@ CONFIGURATION
         If it is not the same as the address that initiated the session, the
         session is deleted.
 
+        Defaults to false.
+
     flash_to_stash
         This option makes it easier to have actions behave the same whether
         they were forwarded to or redirected to. On prepare time it copies

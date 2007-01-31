@@ -12,7 +12,7 @@ use Digest              ();
 use overload            ();
 use Object::Signature   ();
 
-our $VERSION = "0.13";
+our $VERSION = "0.14";
 
 my @session_data_accessors; # used in delete_session
 BEGIN {
@@ -68,7 +68,7 @@ sub setup_session {
 
     %$cfg = (
         expires        => 7200,
-        verify_address => 1,
+        verify_address => 0,
         %$cfg,
     );
 
@@ -380,12 +380,28 @@ sub keep_flash {
     (@{$href}{@keys}) = ((undef) x @keys);
 }
 
-sub flash {
+sub _flash_data { 
     my $c = shift;
     $c->_flash || $c->_load_flash || do {
         $c->create_session_id_if_needed;
         $c->_flash( {} );
+    };
+}
+
+sub _set_flash {
+    my $c = shift;
+    if (@_) {
+        my $items = @_ > 1 ? {@_} : $_[0];
+        croak('flash takes a hash or hashref') unless ref $items;
+        @{ $c->_flash }{ keys %$items } = values %$items;
     }
+}
+
+sub flash {
+    my $c = shift;
+    $c->_flash_data;
+	$c->_set_flash(@_);
+	return $c->_flash;
 }
 
 sub clear_flash {
@@ -861,6 +877,8 @@ hours).
 
 When true, C<<$c->request->address>> will be checked at prepare time. If it is
 not the same as the address that initiated the session, the session is deleted.
+
+Defaults to false.
 
 =item flash_to_stash
 
