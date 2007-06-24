@@ -18,6 +18,7 @@ SYNOPSIS
             # more complicated backends are available for other scenarios (DBI storage,
             # etc)
 
+
         # after you've loaded the plugins you can save session data
         # For example, if you are writing a shopping cart, it could be implemented
         # like this:
@@ -59,7 +60,7 @@ DESCRIPTION
 
     This plugin links the two pieces together.
 
-RECCOMENDED BACKENDS
+RECOMENDED BACKENDS
     Session::State::Cookie
         The only really sane way to do state is using cookies.
 
@@ -122,8 +123,8 @@ METHODS
                 my ( $self, $c ) = @_;
 
                 if ( exists $c->flash->{beans} ) { # false
-        
-                }
+                
+        }
             }
 
     clear_flash

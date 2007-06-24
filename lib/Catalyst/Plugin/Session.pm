@@ -11,8 +11,9 @@ use Catalyst::Exception ();
 use Digest              ();
 use overload            ();
 use Object::Signature   ();
+use Carp;
 
-our $VERSION = "0.14";
+our $VERSION = "0.15";
 
 my @session_data_accessors; # used in delete_session
 BEGIN {
@@ -91,9 +92,9 @@ sub prepare_action {
 sub finalize {
     my $c = shift;
 
-    $c->finalize_session;
-    
     $c->NEXT::finalize(@_);
+
+    $c->finalize_session;
 }
 
 sub finalize_session {
@@ -582,7 +583,7 @@ made by the same client.
 
 This plugin links the two pieces together.
 
-=head1 RECCOMENDED BACKENDS
+=head1 RECOMENDED BACKENDS
 
 =over 4
 
