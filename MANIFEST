@@ -1,4 +1,3 @@
-Catalyst-Plugin-Session-0.13.tar.gz
 Changes
 lib/Catalyst/Plugin/Session.pm
 lib/Catalyst/Plugin/Session/State.pm
@@ -13,6 +12,7 @@ t/00_basic_sanity.t
 t/01_setup.t
 t/03_flash.t
 t/05_semi_persistent_flash.t
+t/06_finalize.t
 t/99_pod.t
 t/99_podcoverage.t
 t/lib/FlashTestApp.pm

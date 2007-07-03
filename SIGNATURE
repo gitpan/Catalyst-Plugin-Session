@@ -14,14 +14,13 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 34901362023649d4c96f47a80fbe4a96f481a1eb Catalyst-Plugin-Session-0.13.tar.gz
-SHA1 04b212ba74b5729b6bf18cafdb577b01acd46a31 Changes
-SHA1 bbd65afc487f6e0fa8fede0b3e806646e03108a8 MANIFEST
-SHA1 66b91494d0e00f84af8bc08d9cf0d6207e7cae92 META.yml
-SHA1 7c1bb314a41e746000a15d97cff75df09ec829af Makefile.PL
+SHA1 8bd16f3d0888d38c35bc8a0a7683e45119166b13 Changes
+SHA1 1ace610ce0faafbd92526a8b162494d34e774c11 MANIFEST
+SHA1 4020dd9c996675c9aacda6f2cddc9b7f6d3578e4 META.yml
+SHA1 2ea12e8735cfd44fd4f7573aa1daef42eb87356f Makefile.PL
 SHA1 fe12d9f590733c185203e73ee200eeddef86150c README
 SHA1 95ec7d7200aced8d44e544b912e3961f2225a40d TODO
-SHA1 a640071dd71d5ae5e1c89d842a2e593ff382b6bd lib/Catalyst/Plugin/Session.pm
+SHA1 c52f420cf40e3ea9f65fbb147612e47e868c1cce lib/Catalyst/Plugin/Session.pm
 SHA1 78469b77f8d2918627d268181f37d9ed561ed65c lib/Catalyst/Plugin/Session/State.pm
 SHA1 7222f45c875cef935dc6f74e7ab3af2d53db4923 lib/Catalyst/Plugin/Session/Store.pm
 SHA1 245f98c39947f2c2197f2311395f8ac79cf301e7 lib/Catalyst/Plugin/Session/Store/Dummy.pm
@@ -31,6 +30,7 @@ SHA1 2acbff46dc11c3e6d037094cecb2f9e897d49fd0 t/00_basic_sanity.t
 SHA1 a108faea2750b27f4c3f84a29741b3b8abd21052 t/01_setup.t
 SHA1 8891c460c3f40546bc46b1c5746f5009dfdaec0d t/03_flash.t
 SHA1 a903382adda2b5ddbc11321a3442deb4459cb230 t/05_semi_persistent_flash.t
+SHA1 5edefd6dd8eae9be4dcd8c7a0cd93a60bc720f87 t/06_finalize.t
 SHA1 86d255a7c9f065a13049108362c949b3e35a4c24 t/99_pod.t
 SHA1 e923679a1bbd8eb8f727e46f5906af25de27ec97 t/99_podcoverage.t
 SHA1 3420a89ef2946ebdce54f6813cc7fdadd11c6956 t/lib/FlashTestApp.pm
@@ -39,7 +39,7 @@ SHA1 77c6345ff29f11b584133aa9e99fd007270823b4 t/live_app.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.7 (Darwin)
 
-iD8DBQFGfoqxVCwRwOvSdBgRAg4aAJ95OdtjYNlYSFBd1OPF0Pq1C2cS9gCgslip
-WDd2AvuHd5NgZjP8GTbrcFo=
-=IT6+
+iD8DBQFGil/UVCwRwOvSdBgRAoP4AJ9zl7cdwup6gkYHq9K+YIucDPEGoACdFdML
+Yx9svI1bwiWuj+c2Mel6qq0=
+=kHR3
 -----END PGP SIGNATURE-----
