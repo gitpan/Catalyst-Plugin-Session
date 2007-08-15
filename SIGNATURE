@@ -14,13 +14,13 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 861ad2a8f1c504dd3479ab0a0a5daf16d3e98876 Changes
+SHA1 365d612474dbcffeb7ec9a60e1c844c5a6fd019d Changes
 SHA1 1ace610ce0faafbd92526a8b162494d34e774c11 MANIFEST
-SHA1 52c5186573a8c4f19e70f5a58edb9c81f0949af9 META.yml
+SHA1 e263c169919f735ba7686e53c3d9194f8bf404af META.yml
 SHA1 4f2b3784e4596aa2602878f54e2f7bb2025db7b9 Makefile.PL
 SHA1 fe12d9f590733c185203e73ee200eeddef86150c README
 SHA1 95ec7d7200aced8d44e544b912e3961f2225a40d TODO
-SHA1 7482b1a65a37f0121eee32d7c5bdd9ba556234b8 lib/Catalyst/Plugin/Session.pm
+SHA1 4819e8a1392687b7c8d5651b28710936713027a9 lib/Catalyst/Plugin/Session.pm
 SHA1 78469b77f8d2918627d268181f37d9ed561ed65c lib/Catalyst/Plugin/Session/State.pm
 SHA1 7222f45c875cef935dc6f74e7ab3af2d53db4923 lib/Catalyst/Plugin/Session/Store.pm
 SHA1 245f98c39947f2c2197f2311395f8ac79cf301e7 lib/Catalyst/Plugin/Session/Store/Dummy.pm
@@ -39,7 +39,7 @@ SHA1 77c6345ff29f11b584133aa9e99fd007270823b4 t/live_app.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.7 (Darwin)
 
-iD8DBQFGm0Y/VCwRwOvSdBgRAir9AJ4304QqoGAs/I6FrpIeFCOk2HozEACgpxKe
-Rn0NVfZj+9n/b3z24iwZskg=
-=5qs5
+iD8DBQFGw0CAVCwRwOvSdBgRAlF5AJ0ZYXYQNmggvULyHf0//Uw8pyYoFwCbBU0n
+NmQhO2mHq6uiML+9oFZgyjg=
+=porv
 -----END PGP SIGNATURE-----

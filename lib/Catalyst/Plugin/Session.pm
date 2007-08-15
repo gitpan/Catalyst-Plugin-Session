@@ -13,7 +13,7 @@ use overload            ();
 use Object::Signature   ();
 use Carp;
 
-our $VERSION = "0.17";
+our $VERSION = "0.18";
 
 my @session_data_accessors; # used in delete_session
 BEGIN {
@@ -92,9 +92,11 @@ sub prepare_action {
 sub finalize {
     my $c = shift;
 
-    $c->NEXT::finalize(@_);
+    my $ret = $c->NEXT::finalize(@_);
 
     $c->finalize_session;
+
+    return $ret;
 }
 
 sub finalize_session {
