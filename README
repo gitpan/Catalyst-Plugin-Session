@@ -185,9 +185,14 @@ INTERNAL METHODS
         configuration parameter is on - then it will copy the contents of
         the flash to the stash at prepare time.
 
+    finalize_headers
+        This method is extended and will extend the expiry time before
+        sending the response.
+
     finalize
-        This method is extended and will extend the expiry time, as well as
-        persist the session data if a session exists.
+        This method is extended and will call finalize_session after the
+        other finalizes run. Here we persist the session data if a session
+        exists.
 
     initialize_session_data
         This method will initialize the internal structure of the session,
@@ -257,6 +262,17 @@ INTERNAL METHODS
     dump_these
         See "dump_these" in Catalyst - ammends the session data structure to
         the list of dumped objects if session ID is defined.
+
+    calculate_extended_session_expires
+    calculate_initial_session_expires
+    create_session_id_if_needed
+    delete_session_id
+    extend_session_expires
+    extend_session_id
+    get_session_id
+    reset_session_expires
+    session_is_valid
+    set_session_id
 
 USING SESSIONS DURING PREPARE
     The earliest point in time at which you may use the session data is

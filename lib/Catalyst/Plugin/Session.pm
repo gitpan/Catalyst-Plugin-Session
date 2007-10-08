@@ -13,7 +13,7 @@ use overload            ();
 use Object::Signature   ();
 use Carp;
 
-our $VERSION = "0.18";
+our $VERSION = "0.19";
 
 my @session_data_accessors; # used in delete_session
 BEGIN {
@@ -89,13 +89,21 @@ sub prepare_action {
     $c->NEXT::prepare_action(@_);
 }
 
-sub finalize {
+sub finalize_headers {
     my $c = shift;
 
+    # fix cookie before we send headers
+    $c->_save_session_expires;
+
+    return $c->NEXT::finalize_headers(@_);
+}
+
+sub finalize {
+    my $c = shift;
     my $ret = $c->NEXT::finalize(@_);
 
+    # then finish the rest
     $c->finalize_session;
-
     return $ret;
 }
 
@@ -107,7 +115,6 @@ sub finalize_session {
     $c->_save_session_id;
     $c->_save_session;
     $c->_save_flash;
-    $c->_save_session_expires;
 
     $c->_clear_session_instance_data;
 }
@@ -403,8 +410,8 @@ sub _set_flash {
 sub flash {
     my $c = shift;
     $c->_flash_data;
-	$c->_set_flash(@_);
-	return $c->_flash;
+    $c->_set_flash(@_);
+    return $c->_flash;
 }
 
 sub clear_flash {
@@ -745,10 +752,15 @@ It's only effect is if the (off by default) C<flash_to_stash> configuration
 parameter is on - then it will copy the contents of the flash to the stash at
 prepare time.
 
+=item finalize_headers
+
+This method is extended and will extend the expiry time before sending
+the response.
+
 =item finalize
 
-This method is extended and will extend the expiry time, as well as persist the
-session data if a session exists.
+This method is extended and will call finalize_session after the other
+finalizes run.  Here we persist the session data if a session exists.
 
 =item initialize_session_data
 
@@ -837,6 +849,27 @@ This clears the various accessors after saving to the store.
 
 See L<Catalyst/dump_these> - ammends the session data structure to the list of
 dumped objects if session ID is defined.
+
+
+=item calculate_extended_session_expires
+
+=item calculate_initial_session_expires
+
+=item create_session_id_if_needed
+
+=item delete_session_id
+
+=item extend_session_expires
+
+=item extend_session_id
+
+=item get_session_id
+
+=item reset_session_expires
+
+=item session_is_valid
+
+=item set_session_id
 
 =back
 
