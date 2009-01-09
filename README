@@ -12,12 +12,11 @@ SYNOPSIS
           Session::State::Cookie
           /;
 
-            # you can replace Store::FastMmap with Store::File - both have sensible
-            # default configurations (see their docs for details)
+        # you can replace Store::FastMmap with Store::File - both have sensible
+        # default configurations (see their docs for details)
 
-            # more complicated backends are available for other scenarios (DBI storage,
-            # etc)
-
+        # more complicated backends are available for other scenarios (DBI storage,
+        # etc)
 
         # after you've loaded the plugins you can save session data
         # For example, if you are writing a shopping cart, it could be implemented
@@ -123,22 +122,23 @@ METHODS
                 my ( $self, $c ) = @_;
 
                 if ( exists $c->flash->{beans} ) { # false
-                
-        }
+        
+                }
             }
 
     clear_flash
         Zap all the keys in the flash regardless of their current state.
 
     keep_flash @keys
-        If you wawnt to keep a flash key for the next request too, even if
-        it hasn't changed, call "keep_flash" and pass in the keys as
-        arguments.
+        If you want to keep a flash key for the next request too, even if it
+        hasn't changed, call "keep_flash" and pass in the keys as arguments.
 
     delete_session REASON
         This method is used to invalidate a session. It takes an optional
         parameter which will be saved in "session_delete_reason" if
         provided.
+
+        NOTE: This method will also delete your flash data.
 
     session_delete_reason
         This accessor contains a string with the reason a session was
@@ -179,9 +179,9 @@ INTERNAL METHODS
         values listed in "CONFIGURATION".
 
     prepare_action
-        This methoid is extended.
+        This method is extended.
 
-        It's only effect is if the (off by default) "flash_to_stash"
+        Its only effect is if the (off by default) "flash_to_stash"
         configuration parameter is on - then it will copy the contents of
         the flash to the stash at prepare time.
 
@@ -189,17 +189,17 @@ INTERNAL METHODS
         This method is extended and will extend the expiry time before
         sending the response.
 
-    finalize
-        This method is extended and will call finalize_session after the
-        other finalizes run. Here we persist the session data if a session
-        exists.
+    finalize_body
+        This method is extended and will call finalize_session before the
+        other finalize_body methods run. Here we persist the session data if
+        a session exists.
 
     initialize_session_data
         This method will initialize the internal structure of the session,
         and is called by the "session" method if appropriate.
 
     create_session_id
-        Creates a new session id using "generate_session_id" if there is no
+        Creates a new session ID using "generate_session_id" if there is no
         session ID yet.
 
     validate_session_id SID
@@ -212,7 +212,7 @@ INTERNAL METHODS
         This method will return a string that can be used as a session ID.
         It is supposed to be a reasonably random string with enough bits to
         prevent collision. It basically takes "session_hash_seed" and hashes
-        it using SHA-1, MD5 or SHA-256, depending on the availibility of
+        it using SHA-1, MD5 or SHA-256, depending on the availability of
         these modules.
 
     session_hash_seed
@@ -221,17 +221,13 @@ INTERNAL METHODS
 
         Currently it returns a concatenated string which contains:
 
-        *   A counter
+        * A counter
+        * The current time
+        * One value from "rand".
+        * The stringified value of a newly allocated hash reference
+        * The stringified value of the Catalyst context object
 
-        *   The current time
-
-        *   One value from "rand".
-
-        *   The stringified value of a newly allocated hash reference
-
-        *   The stringified value of the Catalyst context object
-
-        In the hopes that those combined values are entropic enough for most
+        in the hopes that those combined values are entropic enough for most
         uses. If this is not the case you can replace "session_hash_seed"
         with e.g.
 
@@ -282,16 +278,16 @@ USING SESSIONS DURING PREPARE
     during "prepare_action" Catalyst::Plugin::Session will actually load the
     data from the store.
 
-            sub prepare_action {
-                    my $c = shift;
+        sub prepare_action {
+            my $c = shift;
 
-                    # don't touch $c->session yet!
+            # don't touch $c->session yet!
 
-                    $c->NEXT::prepare_action( @_ );
+            $c->NEXT::prepare_action( @_ );
 
-                    $c->session;  # this is OK
-                    $c->sessionid; # this is also OK
-            }
+            $c->session;  # this is OK
+            $c->sessionid; # this is also OK
+        }
 
 CONFIGURATION
         $c->config->{session} = {
@@ -346,16 +342,16 @@ CAVEATS
     verification as a whole, or provide a checkbox in the login dialog that
     tells the server that it's OK for the address of the client to change.
     When the server sees that this box is checked it should delete the
-    "__address" sepcial key from the session hash when the hash is first
+    "__address" special key from the session hash when the hash is first
     created.
 
   Race Conditions
-    In this day and age where cleaning detergents and dutch football (not
-    the american kind) teams roam the plains in great numbers, requests may
+    In this day and age where cleaning detergents and Dutch football (not
+    the American kind) teams roam the plains in great numbers, requests may
     happen simultaneously. This means that there is some risk of session
     data being overwritten, like this:
 
-    1.  request a starts, request b starts, with the same session id
+    1.  request a starts, request b starts, with the same session ID
 
     2.  session data is loaded in request a
 
@@ -368,7 +364,7 @@ CAVEATS
     6.  request b finishes, session data is updated and written to store,
         overwriting changes by request a
 
-    If this is a concern in your application, a soon to be developed locking
+    If this is a concern in your application, a soon-to-be-developed locking
     solution is the only safe way to go. This will have a bigger overhead.
 
     For applications where any given user is only making one request at a
@@ -376,14 +372,21 @@ CAVEATS
 
 AUTHORS
     Andy Grundman
+
     Christian Hansen
-    Yuval Kogman, "nothingmuch@woobling.org" (current maintainer)
+
+    Yuval Kogman, "nothingmuch@woobling.org"
+
     Sebastian Riedel
+
+    Tomas Doran (t0m) "bobtfish@bobtfish.net" (current maintainer)
+
+    Sergio Salvi
 
     And countless other contributers from #catalyst. Thanks guys!
 
 COPYRIGHT & LICENSE
-            Copyright (c) 2005 the aforementioned authors. All rights
-            reserved. This program is free software; you can redistribute
-            it and/or modify it under the same terms as Perl itself.
+        Copyright (c) 2005 the aforementioned authors. All rights
+        reserved. This program is free software; you can redistribute
+        it and/or modify it under the same terms as Perl itself.
 

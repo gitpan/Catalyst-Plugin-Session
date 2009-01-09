@@ -6,14 +6,14 @@ use base qw/Class::Accessor::Fast/;
 use strict;
 use warnings;
 
-use NEXT;
+use MRO::Compat;
 use Catalyst::Exception ();
 use Digest              ();
 use overload            ();
 use Object::Signature   ();
 use Carp;
 
-our $VERSION = "0.19";
+our $VERSION = '0.19_01';
 
 my @session_data_accessors; # used in delete_session
 BEGIN {
@@ -39,7 +39,7 @@ BEGIN {
 sub setup {
     my $c = shift;
 
-    $c->NEXT::setup(@_);
+    $c->maybe::next::method(@_);
 
     $c->check_session_plugin_requirements;
     $c->setup_session;
@@ -73,7 +73,7 @@ sub setup_session {
         %$cfg,
     );
 
-    $c->NEXT::setup_session();
+    $c->maybe::next::method();
 }
 
 sub prepare_action {
@@ -86,7 +86,7 @@ sub prepare_action {
         @{ $c->stash }{ keys %$flash_data } = values %$flash_data;
     }
 
-    $c->NEXT::prepare_action(@_);
+    $c->maybe::next::method(@_);
 }
 
 sub finalize_headers {
@@ -95,22 +95,24 @@ sub finalize_headers {
     # fix cookie before we send headers
     $c->_save_session_expires;
 
-    return $c->NEXT::finalize_headers(@_);
+    return $c->maybe::next::method(@_);
 }
 
-sub finalize {
+sub finalize_body {
     my $c = shift;
-    my $ret = $c->NEXT::finalize(@_);
 
-    # then finish the rest
+    # We have to finalize our session *before* $c->engine->finalize_xxx is called,
+    # because we do not want to send the HTTP response before the session is stored/committed to
+    # the session database (or whatever Session::Store you use).
     $c->finalize_session;
-    return $ret;
+
+    return $c->maybe::next::method(@_);
 }
 
 sub finalize_session {
     my $c = shift;
 
-    $c->NEXT::finalize_session;
+    $c->maybe::next::method(@_);
 
     $c->_save_session_id;
     $c->_save_session;
@@ -168,12 +170,15 @@ sub _save_flash {
         
         my $sid = $c->sessionid;
 
+        my $session_data = $c->_session;
         if (%$flash_data) {
-            $c->store_session_data( "flash:$sid", $flash_data );
+            $session_data->{__flash} = $flash_data;
         }
         else {
-            $c->delete_session_data("flash:$sid");
+            delete $session_data->{__flash};
         }
+        $c->_session($session_data);
+        $c->_save_session;
     }
 }
 
@@ -238,8 +243,11 @@ sub _load_flash {
     $c->_tried_loading_flash_data(1);
 
     if ( my $sid = $c->sessionid ) {
-        if ( my $flash_data = $c->_flash
-            || $c->_flash( $c->get_session_data("flash:$sid") ) )
+
+        my $session_data = $c->session;
+        $c->_flash($session_data->{__flash});
+
+        if ( my $flash_data = $c->_flash )
         {
             $c->_flash_key_hashes({ map { $_ => Object::Signature::signature( \$flash_data->{$_} ) } keys %$flash_data });
             
@@ -265,7 +273,7 @@ sub _expire_session_keys {
 sub _clear_session_instance_data {
     my $c = shift;
     $c->$_(undef) for @session_data_accessors;
-    $c->NEXT::_clear_session_instance_data; # allow other plugins to hook in on this
+    $c->maybe::next::method(@_); # allow other plugins to hook in on this
 }
 
 sub delete_session {
@@ -508,7 +516,7 @@ sub dump_these {
     my $c = shift;
 
     (
-        $c->NEXT::dump_these(),
+        $c->maybe::next::method(),
 
         $c->sessionid
         ? ( [ "Session ID" => $c->sessionid ], [ Session => $c->session ], )
@@ -517,10 +525,10 @@ sub dump_these {
 }
 
 
-sub get_session_id { shift->NEXT::get_session_id(@_) }
-sub set_session_id { shift->NEXT::set_session_id(@_) }
-sub delete_session_id { shift->NEXT::delete_session_id(@_) }
-sub extend_session_id { shift->NEXT::extend_session_id(@_) }
+sub get_session_id { shift->maybe::next::method(@_) }
+sub set_session_id { shift->maybe::next::method(@_) }
+sub delete_session_id { shift->maybe::next::method(@_) }
+sub extend_session_id { shift->maybe::next::method(@_) }
 
 __PACKAGE__;
 
@@ -530,8 +538,7 @@ __END__
 
 =head1 NAME
 
-Catalyst::Plugin::Session - Generic Session plugin - ties together server side
-storage and client side state required to maintain session data.
+Catalyst::Plugin::Session - Generic Session plugin - ties together server side storage and client side state required to maintain session data.
 
 =head1 SYNOPSIS
 
@@ -543,11 +550,11 @@ storage and client side state required to maintain session data.
       Session::State::Cookie
       /;
 
-	# you can replace Store::FastMmap with Store::File - both have sensible
-	# default configurations (see their docs for details)
+    # you can replace Store::FastMmap with Store::File - both have sensible
+    # default configurations (see their docs for details)
 
-	# more complicated backends are available for other scenarios (DBI storage,
-	# etc)
+    # more complicated backends are available for other scenarios (DBI storage,
+    # etc)
 
 
     # after you've loaded the plugins you can save session data
@@ -680,13 +687,15 @@ Zap all the keys in the flash regardless of their current state.
 
 =item keep_flash @keys
 
-If you wawnt to keep a flash key for the next request too, even if it hasn't
+If you want to keep a flash key for the next request too, even if it hasn't
 changed, call C<keep_flash> and pass in the keys as arguments.
 
 =item delete_session REASON
 
 This method is used to invalidate a session. It takes an optional parameter
 which will be saved in C<session_delete_reason> if provided.
+
+NOTE: This method will B<also> delete your flash data.
 
 =item session_delete_reason
 
@@ -746,9 +755,9 @@ listed in L</CONFIGURATION>.
 
 =item prepare_action
 
-This methoid is extended.
+This method is extended.
 
-It's only effect is if the (off by default) C<flash_to_stash> configuration
+Its only effect is if the (off by default) C<flash_to_stash> configuration
 parameter is on - then it will copy the contents of the flash to the stash at
 prepare time.
 
@@ -757,10 +766,10 @@ prepare time.
 This method is extended and will extend the expiry time before sending
 the response.
 
-=item finalize
+=item finalize_body
 
-This method is extended and will call finalize_session after the other
-finalizes run.  Here we persist the session data if a session exists.
+This method is extended and will call finalize_session before the other
+finalize_body methods run.  Here we persist the session data if a session exists.
 
 =item initialize_session_data
 
@@ -769,7 +778,7 @@ called by the C<session> method if appropriate.
 
 =item create_session_id
 
-Creates a new session id using C<generate_session_id> if there is no session ID
+Creates a new session ID using C<generate_session_id> if there is no session ID
 yet.
 
 =item validate_session_id SID
@@ -784,7 +793,7 @@ insensitive hexadecimal characters.
 This method will return a string that can be used as a session ID. It is
 supposed to be a reasonably random string with enough bits to prevent
 collision. It basically takes C<session_hash_seed> and hashes it using SHA-1,
-MD5 or SHA-256, depending on the availibility of these modules.
+MD5 or SHA-256, depending on the availability of these modules.
 
 =item session_hash_seed
 
@@ -795,29 +804,19 @@ Currently it returns a concatenated string which contains:
 
 =over 4
 
-=item *
+=item * A counter
 
-A counter
+=item * The current time
 
-=item *
+=item * One value from C<rand>.
 
-The current time
+=item * The stringified value of a newly allocated hash reference
 
-=item *
-
-One value from C<rand>.
-
-=item *
-
-The stringified value of a newly allocated hash reference
-
-=item *
-
-The stringified value of the Catalyst context object
+=item * The stringified value of the Catalyst context object
 
 =back
 
-In the hopes that those combined values are entropic enough for most uses. If
+in the hopes that those combined values are entropic enough for most uses. If
 this is not the case you can replace C<session_hash_seed> with e.g.
 
     sub session_hash_seed {
@@ -882,16 +881,16 @@ State plugins must set $c->session ID before C<prepare_action>, and during
 C<prepare_action> L<Catalyst::Plugin::Session> will actually load the data from
 the store.
 
-	sub prepare_action {
-		my $c = shift;
+    sub prepare_action {
+        my $c = shift;
 
-		# don't touch $c->session yet!
+        # don't touch $c->session yet!
 
-		$c->NEXT::prepare_action( @_ );
+        $c->NEXT::prepare_action( @_ );
 
-		$c->session;  # this is OK
-		$c->sessionid; # this is also OK
-	}
+        $c->session;  # this is OK
+        $c->sessionid; # this is also OK
+    }
 
 =head1 CONFIGURATION
 
@@ -962,13 +961,13 @@ users' sessions cannot persist.
 To let these users access your site you can either disable address verification
 as a whole, or provide a checkbox in the login dialog that tells the server
 that it's OK for the address of the client to change. When the server sees that
-this box is checked it should delete the C<__address> sepcial key from the
+this box is checked it should delete the C<__address> special key from the
 session hash when the hash is first created.
 
 =head2 Race Conditions
 
-In this day and age where cleaning detergents and dutch football (not the
-american kind) teams roam the plains in great numbers, requests may happen
+In this day and age where cleaning detergents and Dutch football (not the
+American kind) teams roam the plains in great numbers, requests may happen
 simultaneously. This means that there is some risk of session data being
 overwritten, like this:
 
@@ -976,7 +975,7 @@ overwritten, like this:
 
 =item 1.
 
-request a starts, request b starts, with the same session id
+request a starts, request b starts, with the same session ID
 
 =item 2.
 
@@ -1001,7 +1000,7 @@ changes by request a
 
 =back
 
-If this is a concern in your application, a soon to be developed locking
+If this is a concern in your application, a soon-to-be-developed locking
 solution is the only safe way to go. This will have a bigger overhead.
 
 For applications where any given user is only making one request at a time this
@@ -1009,25 +1008,25 @@ plugin should be safe enough.
 
 =head1 AUTHORS
 
-=over 4
+Andy Grundman
 
-=item Andy Grundman
+Christian Hansen
 
-=item Christian Hansen
+Yuval Kogman, C<nothingmuch@woobling.org>
 
-=item Yuval Kogman, C<nothingmuch@woobling.org> (current maintainer)
+Sebastian Riedel
 
-=item Sebastian Riedel
+Tomas Doran (t0m) C<bobtfish@bobtfish.net> (current maintainer)
 
-=back
+Sergio Salvi
 
 And countless other contributers from #catalyst. Thanks guys!
 
 =head1 COPYRIGHT & LICENSE
 
-	Copyright (c) 2005 the aforementioned authors. All rights
-	reserved. This program is free software; you can redistribute
-	it and/or modify it under the same terms as Perl itself.
+    Copyright (c) 2005 the aforementioned authors. All rights
+    reserved. This program is free software; you can redistribute
+    it and/or modify it under the same terms as Perl itself.
 
 =cut
 
