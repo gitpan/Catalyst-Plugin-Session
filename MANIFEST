@@ -1,4 +1,5 @@
 Changes
+IDEAS.txt
 inc/Module/Install.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
@@ -26,4 +27,3 @@ t/99_podcoverage.t
 t/lib/FlashTestApp.pm
 t/lib/SessionTestApp.pm
 t/live_app.t
-TODO
