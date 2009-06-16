@@ -308,6 +308,13 @@ CONFIGURATION
 
         Defaults to false.
 
+    verify_user_agent
+        When true, "<$c-"request->user_agent>> will be checked at prepare
+        time. If it is not the same as the user agent that initiated the
+        session, the session is deleted.
+
+        Defaults to false.
+
     flash_to_stash
         This option makes it easier to have actions behave the same whether
         they were forwarded to or redirected to. On prepare time it copies
@@ -330,6 +337,11 @@ SPECIAL KEYS
         The value of "$c->request->address" at the time the session was
         created. This value is only populated if "verify_address" is true in
         the configuration.
+
+    __user_agent
+        The value of "$c->request->user_agent" at the time the session was
+        created. This value is only populated if "verify_user_agent" is true
+        in the configuration.
 
 CAVEATS
   Round the Robin Proxies
