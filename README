@@ -122,7 +122,7 @@ METHODS
                 my ( $self, $c ) = @_;
 
                 if ( exists $c->flash->{beans} ) { # false
-        
+
                 }
             }
 
@@ -164,6 +164,31 @@ METHODS
         logged out after an hour.
 
         Note that these values are not auto extended.
+
+    change_session_id
+        By calling this method you can force a session id change while
+        keeping all session data. This method might come handy when you are
+        paranoid about some advanced variations of session fixation attack.
+
+        If you want to prevent this session fixation scenario:
+
+            0) let us have WebApp with anonymous and authenticated parts
+            1) a hacker goes to vulnerable WebApp and gets a real sessionid,
+               just by browsing anonymous part of WebApp
+            2) the hacker inserts (somehow) this values into a cookie in victim's browser
+            3) after the victim logs into WebApp the hacker can enter his/her session
+
+        you should call change_session_id in your login controller like
+        this:
+
+              if ($c->authenticate( { username => $user, password => $pass } )) {
+                # login OK
+                $c->change_session_id;
+                ...
+              } else {
+                # login FAILED
+                ...
+              }
 
 INTERNAL METHODS
     setup
@@ -394,6 +419,8 @@ AUTHORS
     Tomas Doran (t0m) "bobtfish@bobtfish.net" (current maintainer)
 
     Sergio Salvi
+
+    kmx "kmx@volny.cz"
 
     And countless other contributers from #catalyst. Thanks guys!
 
