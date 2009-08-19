@@ -13,7 +13,7 @@ use Carp;
 
 use namespace::clean -except => 'meta';
 
-our $VERSION = '0.25';
+our $VERSION = '0.26';
 
 my @session_data_accessors; # used in delete_session
 
@@ -80,14 +80,14 @@ sub setup_session {
 sub prepare_action {
     my $c = shift;
 
+    $c->maybe::next::method(@_);
+
     if (    $c->config->{session}{flash_to_stash}
         and $c->sessionid
         and my $flash_data = $c->flash )
     {
         @{ $c->stash }{ keys %$flash_data } = values %$flash_data;
     }
-
-    $c->maybe::next::method(@_);
 }
 
 sub finalize_headers {
