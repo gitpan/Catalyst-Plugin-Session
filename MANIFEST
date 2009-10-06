@@ -24,7 +24,9 @@ t/05_semi_persistent_flash.t
 t/99_pod.t
 t/99_podcoverage.t
 t/lib/FlashTestApp.pm
+t/lib/FlashTestApp/Controller/Root.pm
 t/lib/SessionTestApp.pm
+t/lib/SessionTestApp/Controller/Root.pm
 t/live_app.t
 t/live_session_fixation.t
 t/live_verify_user_agent.t
