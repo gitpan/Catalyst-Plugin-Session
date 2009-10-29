@@ -18,7 +18,6 @@ SYNOPSIS
         # more complicated backends are available for other scenarios (DBI storage,
         # etc)
 
-
         # after you've loaded the plugins you can save session data
         # For example, if you are writing a shopping cart, it could be implemented
         # like this:
@@ -247,15 +246,11 @@ INTERNAL METHODS
 
         Currently it returns a concatenated string which contains:
 
-        *   A counter
-
-        *   The current time
-
-        *   One value from "rand".
-
-        *   The stringified value of a newly allocated hash reference
-
-        *   The stringified value of the Catalyst context object
+        * A counter
+        * The current time
+        * One value from "rand".
+        * The stringified value of a newly allocated hash reference
+        * The stringified value of the Catalyst context object
 
         in the hopes that those combined values are entropic enough for most
         uses. If this is not the case you can replace "session_hash_seed"
@@ -426,6 +421,10 @@ AUTHORS
     Sergio Salvi
 
     kmx "kmx@volny.cz"
+
+    Florian Ragwitz (rafl) "rafl@debian.org"
+
+    Kent Fredric (kentnl)
 
     And countless other contributers from #catalyst. Thanks guys!
 
