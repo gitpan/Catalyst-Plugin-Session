@@ -13,7 +13,7 @@ use Carp;
 
 use namespace::clean -except => 'meta';
 
-our $VERSION = '0.28';
+our $VERSION = '0.29';
 $VERSION = eval $VERSION;
 
 my @session_data_accessors; # used in delete_session
@@ -375,6 +375,11 @@ sub reset_session_expires {
 
     my $exp = $c->calculate_initial_session_expires;
     $c->_session_expires( $exp );
+    #
+    # since we're setting _session_expires directly, make load_session_expires
+    # actually use that value.
+    #
+    $c->_tried_loading_session_expires(1);
     $c->_extended_session_expires( $exp );
     $exp;
 }
@@ -425,10 +430,21 @@ sub validate_session_id {
 sub session {
     my $c = shift;
 
-    $c->_session || $c->_load_session || do {
+    my $session = $c->_session || $c->_load_session || do {
         $c->create_session_id_if_needed;
         $c->initialize_session_data;
     };
+
+    if (@_) {
+      my $new_values = @_ > 1 ? { @_ } : $_[0];
+      croak('session takes a hash or hashref') unless ref $new_values;
+
+      for my $key (keys %$new_values) {
+        $session->{$key} = $new_values->{$key};
+      }
+    }
+
+    $session;
 }
 
 sub keep_flash {
@@ -677,6 +693,13 @@ requests.
 
 This method will automatically create a new session and session ID if none
 exists.
+
+You can also set session keys by passing a list of key/value pairs or a
+hashref.
+
+    $c->session->{foo} = "bar";      # This works.
+    $c->session(one => 1, two => 2); # And this.
+    $c->session({ answer => 42 });   # And this.
 
 =item session_expires
 
