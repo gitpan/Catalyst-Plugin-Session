@@ -13,7 +13,7 @@ use Carp;
 
 use namespace::clean -except => 'meta';
 
-our $VERSION = '0.30';
+our $VERSION = '0.31';
 $VERSION = eval $VERSION;
 
 my @session_data_accessors; # used in delete_session
@@ -578,7 +578,7 @@ sub dump_these {
     (
         $c->maybe::next::method(),
 
-        $c->sessionid
+        $c->_sessionid
         ? ( [ "Session ID" => $c->sessionid ], [ Session => $c->session ], )
         : ()
     );
@@ -788,7 +788,8 @@ expiry time for the whole session).
 
 For example:
 
-    __PACKAGE__->config('Plugin::Session' => { expires => 1000000000000 }); # forever
+    __PACKAGE__->config('Plugin::Session' => { expires => 10000000000 }); # "forever" 
+    (NB If this number is too large, Y2K38 breakage could result.)
 
     # later
 
