@@ -13,7 +13,7 @@ use Carp;
 
 use namespace::clean -except => 'meta';
 
-our $VERSION = '0.31';
+our $VERSION = '0.32';
 $VERSION = eval $VERSION;
 
 my @session_data_accessors; # used in delete_session
@@ -225,6 +225,7 @@ sub _load_session {
 
             no warnings 'uninitialized';    # ne __address
             if (   $c->_session_plugin_config->{verify_address}
+                && exists $session_data->{__address}
                 && $session_data->{__address} ne $c->request->address )
             {
                 $c->log->warn(

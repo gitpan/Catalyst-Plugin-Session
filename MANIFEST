@@ -32,5 +32,6 @@ t/lib/SessionValid/Controller/Root.pm
 t/live_accessor.t
 t/live_app.t
 t/live_session_fixation.t
+t/live_verify_address.t
 t/live_verify_user_agent.t
 t/session_valid.t
