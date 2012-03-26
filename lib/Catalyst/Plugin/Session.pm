@@ -13,7 +13,7 @@ use Carp;
 
 use namespace::clean -except => 'meta';
 
-our $VERSION = '0.32';
+our $VERSION = '0.33';
 $VERSION = eval $VERSION;
 
 my @session_data_accessors; # used in delete_session
@@ -102,8 +102,10 @@ sub prepare_action {
 sub finalize_headers {
     my $c = shift;
 
-    # fix cookie before we send headers
-    $c->_save_session_expires;
+    # Force extension of session_expires before finalizing headers, so a possible cookie will be
+    # up to date. First call to session_expires will extend the expiry, subsequent calls will
+    # just return the previously extended value.
+    $c->session_expires;
 
     return $c->maybe::next::method(@_);
 }
@@ -124,6 +126,7 @@ sub finalize_session {
 
     $c->maybe::next::method(@_);
 
+    $c->_save_session_expires;
     $c->_save_session_id;
     $c->_save_session;
     $c->_save_flash;
@@ -723,6 +726,15 @@ The flash data will be cleaned up only on requests on which actually use
 $c->flash (thus allowing multiple redirections), and the policy is to delete
 all the keys which haven't changed since the flash data was loaded at the end
 of every request.
+
+Note that use of the flash is an easy way to get data across requests, but
+it's also strongly disrecommended, due it it being inherently plagued with
+race conditions. This means that it's unlikely to work well if your
+users have multiple tabs open at once, or if your site does a lot of AJAX
+requests.
+
+L<Catalyst::Plugin::StatusMessage> is the recommended alternative solution,
+as this doesn't suffer from these issues.
 
     sub moose : Local {
         my ( $self, $c ) = @_;
