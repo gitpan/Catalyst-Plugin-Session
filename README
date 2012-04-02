@@ -171,7 +171,7 @@ METHODS
 
         For example:
 
-            __PACKAGE__->config('Plugin::Session' => { expires => 10000000000 }); # "forever" 
+            __PACKAGE__->config('Plugin::Session' => { expires => 10000000000 }); # "forever"
             (NB If this number is too large, Y2K38 breakage could result.)
 
             # later
@@ -446,6 +446,9 @@ AUTHORS
     Kent Fredric (kentnl)
 
     And countless other contributers from #catalyst. Thanks guys!
+
+Contributors
+    Devin Austin (dhoss) <dhoss@cpan.org>
 
 COPYRIGHT & LICENSE
         Copyright (c) 2005 the aforementioned authors. All rights

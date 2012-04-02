@@ -13,7 +13,7 @@ use Carp;
 
 use namespace::clean -except => 'meta';
 
-our $VERSION = '0.33';
+our $VERSION = '0.34';
 $VERSION = eval $VERSION;
 
 my @session_data_accessors; # used in delete_session
@@ -351,7 +351,7 @@ sub session_expires {
     if ( defined( my $expires = $c->_extended_session_expires ) ) {
         return $expires;
     } elsif ( defined( $expires = $c->_load_session_expires ) ) {
-        return $c->extend_session_expires( $expires );
+        return $c->calculate_initial_session_expires;
     } else {
         return 0;
     }
@@ -371,7 +371,7 @@ sub calculate_initial_session_expires {
 
 sub calculate_extended_session_expires {
     my ( $c, $prev ) = @_;
-    $c->calculate_initial_session_expires;
+    return ( time() + $prev );
 }
 
 sub reset_session_expires {
@@ -801,7 +801,7 @@ expiry time for the whole session).
 
 For example:
 
-    __PACKAGE__->config('Plugin::Session' => { expires => 10000000000 }); # "forever" 
+    __PACKAGE__->config('Plugin::Session' => { expires => 10000000000 }); # "forever"
     (NB If this number is too large, Y2K38 breakage could result.)
 
     # later
@@ -1143,6 +1143,10 @@ Florian Ragwitz (rafl) C<rafl@debian.org>
 Kent Fredric (kentnl)
 
 And countless other contributers from #catalyst. Thanks guys!
+
+=head1 Contributors
+
+Devin Austin (dhoss) <dhoss@cpan.org>
 
 =head1 COPYRIGHT & LICENSE
 
