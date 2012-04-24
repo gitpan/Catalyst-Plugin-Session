@@ -13,7 +13,7 @@ use Carp;
 
 use namespace::clean -except => 'meta';
 
-our $VERSION = '0.34';
+our $VERSION = '0.35';
 $VERSION = eval $VERSION;
 
 my @session_data_accessors; # used in delete_session
@@ -351,7 +351,7 @@ sub session_expires {
     if ( defined( my $expires = $c->_extended_session_expires ) ) {
         return $expires;
     } elsif ( defined( $expires = $c->_load_session_expires ) ) {
-        return $c->calculate_initial_session_expires;
+        return $c->extend_session_expires( $expires );
     } else {
         return 0;
     }
@@ -359,14 +359,34 @@ sub session_expires {
 
 sub extend_session_expires {
     my ( $c, $expires ) = @_;
-    $c->_extended_session_expires( my $updated = $c->calculate_extended_session_expires( $expires ) );
+    $c->_extended_session_expires( my $updated = $c->calculate_initial_session_expires( $expires ) );
     $c->extend_session_id( $c->sessionid, $updated );
     return $updated;
 }
 
-sub calculate_initial_session_expires {
+sub change_session_expires {
+    my ( $c, $expires ) = @_;
+
+    $expires ||= 0;
+    my $sid = $c->sessionid;
+    my $time_exp = time() + $expires;
+    $c->store_session_data( "expires:$sid" => $time_exp );
+}
+
+sub initial_session_expires {
     my $c = shift;
     return ( time() + $c->_session_plugin_config->{expires} );
+}
+
+sub calculate_initial_session_expires {
+    my $c = shift;
+
+    my $initial_expires = $c->initial_session_expires;
+    my $stored_session_expires = 0;
+    if ( my $sid = $c->sessionid ) {
+        $stored_session_expires = $c->get_session_data("expires:$sid") || 0;
+    }
+    return ( $initial_expires > $stored_session_expires ) ? $initial_expires : $stored_session_expires;
 }
 
 sub calculate_extended_session_expires {
@@ -707,15 +727,9 @@ hashref.
 
 =item session_expires
 
-=item session_expires $reset
-
 This method returns the time when the current session will expire, or 0 if
 there is no current session. If there is a session and it already expired, it
 will delete the session and return 0 as well.
-
-If the C<$reset> parameter is true, and there is a session ID the expiry time
-will be reset to the current time plus the time to live (see
-L</CONFIGURATION>). This is used when creating a new session.
 
 =item flash
 
@@ -837,6 +851,14 @@ you should call change_session_id in your login controller like this:
         # login FAILED
         ...
       }
+
+=item change_session_expires $expires
+
+You can change the session expiration time for this session;
+
+    $c->change_session_expires( 4000 );
+
+Note that this only works to set the session longer than the config setting.
 
 =back
 
@@ -966,6 +988,9 @@ dumped objects if session ID is defined.
 
 =item extend_session_expires
 
+Note: this is *not* used to give an individual user a longer session. See
+'change_session_expires'.
+
 =item extend_session_id
 
 =item get_session_id
@@ -975,6 +1000,8 @@ dumped objects if session ID is defined.
 =item session_is_valid
 
 =item set_session_id
+
+=item initial_session_expires
 
 =back
 

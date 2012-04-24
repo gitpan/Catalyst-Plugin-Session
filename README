@@ -90,14 +90,9 @@ METHODS
             $c->session({ answer => 42 });   # And this.
 
     session_expires
-    session_expires $reset
         This method returns the time when the current session will expire,
         or 0 if there is no current session. If there is a session and it
         already expired, it will delete the session and return 0 as well.
-
-        If the $reset parameter is true, and there is a session ID the
-        expiry time will be reset to the current time plus the time to live
-        (see "CONFIGURATION"). This is used when creating a new session.
 
     flash
         This is like Ruby on Rails' flash data structure. Think of it as a
@@ -208,6 +203,14 @@ METHODS
                 ...
               }
 
+    change_session_expires $expires
+        You can change the session expiration time for this session;
+
+            $c->change_session_expires( 4000 );
+
+        Note that this only works to set the session longer than the config
+        setting.
+
 INTERNAL METHODS
     setup
         This method is extended to also make calls to
@@ -311,11 +314,15 @@ INTERNAL METHODS
     create_session_id_if_needed
     delete_session_id
     extend_session_expires
+        Note: this is *not* used to give an individual user a longer
+        session. See 'change_session_expires'.
+
     extend_session_id
     get_session_id
     reset_session_expires
     session_is_valid
     set_session_id
+    initial_session_expires
 
 USING SESSIONS DURING PREPARE
     The earliest point in time at which you may use the session data is
