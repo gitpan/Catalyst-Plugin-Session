@@ -13,7 +13,7 @@ use Carp;
 
 use namespace::clean -except => 'meta';
 
-our $VERSION = '0.35';
+our $VERSION = '0.36';
 $VERSION = eval $VERSION;
 
 my @session_data_accessors; # used in delete_session
@@ -102,8 +102,11 @@ sub prepare_action {
 sub finalize_headers {
     my $c = shift;
 
-    # Force extension of session_expires before finalizing headers, so a possible cookie will be
-    # up to date. First call to session_expires will extend the expiry, subsequent calls will
+    # fix cookie before we send headers
+    $c->_save_session_expires;
+
+    # Force extension of session_expires before finalizing headers, so a pos
+    # up to date. First call to session_expires will extend the expiry, subs
     # just return the previously extended value.
     $c->session_expires;
 
@@ -126,7 +129,6 @@ sub finalize_session {
 
     $c->maybe::next::method(@_);
 
-    $c->_save_session_expires;
     $c->_save_session_id;
     $c->_save_session;
     $c->_save_flash;

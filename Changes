@@ -1,5 +1,11 @@
 Revision history for Perl extension Catalyst::Plugin::Session
 
+0.36 2012-10-19
+       - Re-pack with new Module::Install which doesn't get
+         MYMETA.yaml wrong.
+       - Remove use of Plack::Middleware::ForceEnv from the tests
+          as it was not used / needed
+
 0.35 2012-04-24
         - Implement a 'change_session_expires' method (gshank)
 

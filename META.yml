@@ -4,7 +4,6 @@ author:
   - 'Andy Grundman'
 build_requires:
   ExtUtils::MakeMaker: 6.59
-  Plack::Middleware::ForceEnv: 0
   Test::Deep: 0
   Test::Exception: 0
   Test::WWW::Mechanize::PSGI: 0
@@ -38,4 +37,4 @@ requires:
 resources:
   license: http://dev.perl.org/licenses/
   repository: git://git.shadowcat.co.uk/catagits/Catalyst-Plugin-Session.git
-version: 0.35
+version: 0.36
