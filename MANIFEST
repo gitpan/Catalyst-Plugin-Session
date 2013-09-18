@@ -27,12 +27,15 @@ t/author/podcoverage.t
 t/cat_test.t
 t/lib/FlashTestApp.pm
 t/lib/FlashTestApp/Controller/Root.pm
+t/lib/SessionExpiry.pm
+t/lib/SessionExpiry/Controller/Root.pm
 t/lib/SessionTestApp.pm
 t/lib/SessionTestApp/Controller/Root.pm
 t/lib/SessionValid.pm
 t/lib/SessionValid/Controller/Root.pm
 t/live_accessor.t
 t/live_app.t
+t/live_expiry_threshold.t
 t/live_session_fixation.t
 t/live_verify_address.t
 t/live_verify_user_agent.t

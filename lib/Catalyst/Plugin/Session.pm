@@ -10,10 +10,11 @@ use Digest              ();
 use overload            ();
 use Object::Signature   ();
 use Carp;
+use List::Util qw/ max /;
 
 use namespace::clean -except => 'meta';
 
-our $VERSION = '0.37';
+our $VERSION = '0.38';
 $VERSION = eval $VERSION;
 
 my @session_data_accessors; # used in delete_session
@@ -80,6 +81,7 @@ sub setup_session {
         expires        => 7200,
         verify_address => 0,
         verify_user_agent => 0,
+        expiry_threshold => 0,
         %$cfg,
     );
 
@@ -147,10 +149,16 @@ sub _save_session_expires {
     my $c = shift;
 
     if ( defined($c->_session_expires) ) {
-        my $expires = $c->session_expires; # force extension
 
-        my $sid = $c->sessionid;
-        $c->store_session_data( "expires:$sid" => $expires );
+        if (my $sid = $c->sessionid) {
+
+            my $current  = $c->_get_stored_session_expires;
+            my $extended = $c->session_expires;
+            if ($extended > $current) {
+                $c->store_session_data( "expires:$sid" => $extended );
+            }
+
+        }
     }
 }
 
@@ -203,7 +211,7 @@ sub _load_session_expires {
     $c->_tried_loading_session_expires(1);
 
     if ( my $sid = $c->sessionid ) {
-        my $expires = $c->get_session_data("expires:$sid") || 0;
+        my $expires =  $c->_get_stored_session_expires;
 
         if ( $expires >= time() ) {
             $c->_session_expires( $expires );
@@ -361,9 +369,32 @@ sub session_expires {
 
 sub extend_session_expires {
     my ( $c, $expires ) = @_;
-    $c->_extended_session_expires( my $updated = $c->calculate_initial_session_expires( $expires ) );
-    $c->extend_session_id( $c->sessionid, $updated );
-    return $updated;
+
+    my $threshold = $c->_session_plugin_config->{expiry_threshold} || 0;
+
+    if ( my $sid = $c->sessionid ) {
+        my $expires = $c->_get_stored_session_expires;
+        my $cutoff  = $expires - $threshold;
+
+        if (!$threshold || $cutoff <= time) {
+
+            $c->_extended_session_expires( my $updated = $c->calculate_initial_session_expires() );
+            $c->extend_session_id( $sid, $updated );
+
+            return $updated;
+
+        } else {
+
+            return $expires;
+
+        }
+
+    } else {
+
+        return;
+
+    }
+
 }
 
 sub change_session_expires {
@@ -375,20 +406,24 @@ sub change_session_expires {
     $c->store_session_data( "expires:$sid" => $time_exp );
 }
 
+sub _get_stored_session_expires {
+    my ($c) = @_;
+
+    if ( my $sid = $c->sessionid ) {
+        return $c->get_session_data("expires:$sid") || 0;
+    } else {
+        return 0;
+    }
+}
+
 sub initial_session_expires {
     my $c = shift;
     return ( time() + $c->_session_plugin_config->{expires} );
 }
 
 sub calculate_initial_session_expires {
-    my $c = shift;
-
-    my $initial_expires = $c->initial_session_expires;
-    my $stored_session_expires = 0;
-    if ( my $sid = $c->sessionid ) {
-        $stored_session_expires = $c->get_session_data("expires:$sid") || 0;
-    }
-    return ( $initial_expires > $stored_session_expires ) ? $initial_expires : $stored_session_expires;
+    my ($c) = @_;
+    return max( $c->initial_session_expires, $c->_get_stored_session_expires );
 }
 
 sub calculate_extended_session_expires {
@@ -1043,16 +1078,26 @@ C<Plugin::Session> key in the configuration hash.
 The time-to-live of each session, expressed in seconds. Defaults to 7200 (two
 hours).
 
+=item expiry_threshold
+
+Only update the session expiry time if it would otherwise expire
+within this many seconds from now.
+
+The purpose of this is to keep the session store from being updated
+when nothing else in the session is updated.
+
+Defaults to 0 (in which case, the expiration will always be updated).
+
 =item verify_address
 
-When true, C<<$c->request->address>> will be checked at prepare time. If it is
+When true, C<< $c->request->address >> will be checked at prepare time. If it is
 not the same as the address that initiated the session, the session is deleted.
 
 Defaults to false.
 
 =item verify_user_agent
 
-When true, C<<$c->request->user_agent>> will be checked at prepare time. If it
+When true, C<< $c->request->user_agent >> will be checked at prepare time. If it
 is not the same as the user agent that initiated the session, the session is
 deleted.
 
@@ -1176,6 +1221,8 @@ And countless other contributers from #catalyst. Thanks guys!
 =head1 Contributors
 
 Devin Austin (dhoss) <dhoss@cpan.org>
+
+Robert Rothenberg <rrwo@cpan.org>
 
 =head1 COPYRIGHT & LICENSE
 

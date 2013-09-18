@@ -355,15 +355,25 @@ CONFIGURATION
         The time-to-live of each session, expressed in seconds. Defaults to
         7200 (two hours).
 
+    expiry_threshold
+        Only update the session expiry time if it would otherwise expire
+        within this many seconds from now.
+
+        The purpose of this is to keep the session store from being updated
+        when nothing else in the session is updated.
+
+        Defaults to 0 (in which case, the expiration will always be
+        updated).
+
     verify_address
-        When true, "<$c-"request->address>> will be checked at prepare time.
+        When true, "$c->request->address" will be checked at prepare time.
         If it is not the same as the address that initiated the session, the
         session is deleted.
 
         Defaults to false.
 
     verify_user_agent
-        When true, "<$c-"request->user_agent>> will be checked at prepare
+        When true, "$c->request->user_agent" will be checked at prepare
         time. If it is not the same as the user agent that initiated the
         session, the session is deleted.
 
@@ -456,6 +466,8 @@ AUTHORS
 
 Contributors
     Devin Austin (dhoss) <dhoss@cpan.org>
+
+    Robert Rothenberg <rrwo@cpan.org>
 
 COPYRIGHT & LICENSE
         Copyright (c) 2005 the aforementioned authors. All rights
